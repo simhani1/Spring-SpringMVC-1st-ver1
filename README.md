@@ -39,9 +39,32 @@
 - application/x-www-form-urlencoded 형식은 쿼리 파라미터 형식과 동일하다.
 - 따라서 쿼리 파리미터 조회 메서드를 그대로 사용하면 된다.
 - 즉 `request.getParameter()` 메서드는 GET URL 쿼리 파라미터 형식, POST HTML Form 형식 둘 다 지원하는 것이다.
-
-[img.png](img/img.png)
+![img.png](img/img_1.png)
 
 #### JSON 바디
 - JSON 결과를 파싱해서 사용할 수 있는 자바 객체로 변환하려면 Jackson, Gson같은 변환 라이브러리를 추가해서 사용해야 한다.
 - 스프링 부트로 Spring MVC를 선택하면 기본으로 Jackson을 제공한다. 
+
+#### HttpServletResponse 기본 사용법
+- HTTP 응답코드 지정
+- 헤더 생성
+- 바디 생성
+
+- 편의 기능 제공
+- content-type, 쿠키, Redirect
+
+- response 헤더에 편의 메서드를 사용하여 여러 값들을 지정할 수 있다.
+- 쿠키는 쿠키의 명칭과 값, 그리고 쿠키의 유지시간을 설정 할 수 있다.
+```java
+    private void cookie(HttpServletResponse response) {
+//        Set-Cookie: myCookie=good; Max-Age=600;
+//        response.setHeader("Set-Cookie", "myCookie=good; Max-Age=600");
+        Cookie cookie = new Cookie("myCookie", "good");
+        cookie.setMaxAge(600); // 쿠키 유지시간 600초
+        response.addCookie(cookie);
+    }
+```
+
+- 리다이렉트 정보도 저장할 수 있다.
+  - 이때 웹 브라우저는 캐시에 있는 정보를 사용하기 때문에 같은 요청을 보낸 경우 변동 사항이 없으므로 304 코드를 반환한다.
+  ![img.png](img/img_2.png)
