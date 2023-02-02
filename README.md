@@ -32,4 +32,5 @@
 - POST : HTML Form
 - HTTP message body : 데이터 형식은 주로 JSON을 사용
 
-
+- 복수 파라미터에서 단일 파라미터 조회
+  - `username=sim&username=kim` 인 경우 `request.getParameter()`는 하나의 파라미터만 조회가 가능하므로 `request.getParameterValues()` 를 사용해야 한다.
