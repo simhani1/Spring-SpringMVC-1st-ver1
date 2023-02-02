@@ -41,6 +41,10 @@
 - 즉 `request.getParameter()` 메서드는 GET URL 쿼리 파라미터 형식, POST HTML Form 형식 둘 다 지원하는 것이다.
 ![img.png](img/img_1.png)
 
+- POST 방식만 가능하다.
+- 단 히든 필드를 스프링이 조회해서 PUT, PATCH 같은 요청들을 마치 동작되는 것처럼 보여주기도 한다.
+  - 실은 POST 방식으로 동작하는 것이다.
+
 #### JSON 바디
 - JSON 결과를 파싱해서 사용할 수 있는 자바 객체로 변환하려면 Jackson, Gson같은 변환 라이브러리를 추가해서 사용해야 한다.
 - 스프링 부트로 Spring MVC를 선택하면 기본으로 Jackson을 제공한다. 
