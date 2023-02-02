@@ -34,3 +34,11 @@
 
 - 복수 파라미터에서 단일 파라미터 조회
   - `username=sim&username=kim` 인 경우 `request.getParameter()`는 하나의 파라미터만 조회가 가능하므로 `request.getParameterValues()` 를 사용해야 한다.
+
+#### POST HTML Form
+- application/x-www-form-urlencoded 형식은 쿼리 파라미터 형식과 동일하다.
+- 따라서 쿼리 파리미터 조회 메서드를 그대로 사용하면 된다.
+- 즉 `request.getParameter()` 메서드는 GET URL 쿼리 파라미터 형식, POST HTML Form 형식 둘 다 지원하는 것이다.
+
+[img.png](img/img.png)
+
