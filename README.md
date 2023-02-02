@@ -68,3 +68,12 @@
 - 리다이렉트 정보도 저장할 수 있다.
   - 이때 웹 브라우저는 캐시에 있는 정보를 사용하기 때문에 같은 요청을 보낸 경우 변동 사항이 없으므로 304 코드를 반환한다.
   ![img.png](img/img_2.png)
+
+#### HTTP 응답 데이터 - 단순 텍스트, HTML
+- 단순 텍스트 응답
+  - `writer.println("ok");`
+- HTML 응답
+  - html을 반환할 때는 content-type을 `text/html`로 지정해야 한다.
+- HTTP API, Message Body JSON 응답
+
+
