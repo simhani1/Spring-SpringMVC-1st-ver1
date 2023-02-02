@@ -75,5 +75,22 @@
 - HTML 응답
   - html을 반환할 때는 content-type을 `text/html`로 지정해야 한다.
 - HTTP API, Message Body JSON 응답
+  - ObjectMapper를 사용하여 객체를 JSON 형태로 변환하여 반환시킬 수 있다.
+  ```java
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Content-Type : application/json
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
 
+        HelloData helloData = new HelloData();
+        helloData.setUsername("sim");
+        helloData.setAge(26);
+
+        // {"username" : "sim", "age" : 26}
+        String result = objectMapper.writeValueAsString(helloData);
+        response.getWriter().write(result);
+
+    }
+  ```
 
