@@ -42,3 +42,6 @@
 
 [img.png](img/img.png)
 
+#### JSON 바디
+- JSON 결과를 파싱해서 사용할 수 있는 자바 객체로 변환하려면 Jackson, Gson같은 변환 라이브러리를 추가해서 사용해야 한다.
+- 스프링 부트로 Spring MVC를 선택하면 기본으로 Jackson을 제공한다. 
