@@ -27,4 +27,9 @@
 - 세션 관리 기능
   - `request.getSession(create: true)`
 
+#### HTTP 요청 데이터 개요
+- GET : 쿼리 파라미터
+- POST : HTML Form
+- HTTP message body : 데이터 형식은 주로 JSON을 사용
+
 
