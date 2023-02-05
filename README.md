@@ -163,4 +163,17 @@ implementation 'javax.servlet:jstl'
 - 뷰
   - 모델에 담겨있는 데이터를 사용해서 화면을 그리는 일에 집중한다.
 
+- `dispatcher.forward()`: 다른 서블릿이나 JSP로 이동할 수 있는 기능, 서버 내부에서 다시 호출이 발생한다.
+
+- redirect vs forward
+  - 리다이렉트는 실제 클라이언트에 응답이 나갔다가, 클라이언트가 redirect 경로로 다시 요청한다.
+  - 따라서 클라이언트가 인지할 수 있고 ,URL 경로도 실제로 변경된다.
+  - 포워드는 서버 내부에서 일어나는 호출이기 때문에 클라이언트가 전혀 인지할 수 없다.
+  - WEB-INF 아래에 있는 자원들은 외부에서 호출이 불가능하다. 이는 WAS에서의 규칙이다.
+
+- form의 action에서의 상대경로
+  - 절대경로: 해당 경로 그대로 호출
+  - 상대경로: `현재 URL이 속한 계층 경로 + 상대경로`로 호출된다.
+
+- `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>` JSP 내부에서 `<C:forEach>`를 사용하기 위해서 라이브러리가 필요하다.
 
