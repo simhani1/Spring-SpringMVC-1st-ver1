@@ -98,3 +98,23 @@
     }
   ```
 
+#### 서블릿과 자바 코드만으로 HTML 만들기
+- 서블릿 덕분에 동적으로 원하는 HTML을 만들 수 있었다. 
+- 하지만 HTML을 자바로 작성하는 것은 복잡하고 비효율적이다.
+```java
+        w.write("<html>\n" +
+                "<head>\n" +
+                " <meta charset=\"UTF-8\">\n" + "</head>\n" +
+                "<body>\n" +
+                "성공\n" +
+                "<ul>\n" +
+                "    <li>id=" + member.getId() + "</li>\n" +
+                "    <li>username=" + member.getUsername() + "</li>\n" +
+                " <li>age=" + member.getAge() + "</li>\n" + "</ul>\n" +
+                "<a href=\"/index.html\">메인</a>\n" + "</body>\n" +
+                "</html>");
+```
+
+- 따라서 HMTL문서에 동적으로 변경해야 하는 부분에 자바 코드를 넣을 수 있는 방법이 생겨났다.
+- 이를 템플릿 엔진이라고 하고 그 예로 JSP, Thymeleaf, Freemarker, Velocity 등이 있다.
+
