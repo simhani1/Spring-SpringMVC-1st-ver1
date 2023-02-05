@@ -177,3 +177,20 @@ implementation 'javax.servlet:jstl'
 
 - `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>` JSP 내부에서 `<C:forEach>`를 사용하기 위해서 라이브러리가 필요하다.
 
+#### MVC패턴의 한계
+ - 컨트롤러가 현재 중복이 많고 불필요한 코드들이 많이 보인다.
+ - 포워드 중복
+   - View로 이동하는 코드가 항상 중복으로 호출된다.
+   ```java
+    RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+    dispatcher.forward(request, response);
+    ```
+    - `HttpServletRequest`, `HttpServletResponse` 를 사용하는 코드는 테스트 코드 작성하기에 어렵다.
+ 
+ - 공통 처리가 어렵다.
+   - 기능이 복잡해질 수록 컨트롤러에서 공통으로 처리해야 하는 부분이 점점 증가할 것이다. 
+   - 공통 기능을 메서드로 뽑아도 해당 메서드를 항상 호출해야 한다.
+ - 이 문제를 해결하기 위해 컨트롤러 호출 전에 먼저 공통 기능을 처리해야 한다.
+ - 프론트 컨트롤러 패턴을 도입하면 이런 문제를 해결할 수 있다.(입구를 하나로)
+ - 스프링 MVC의 핵심도 바로 이 프론트 컨틀롤러에 있다.
+
