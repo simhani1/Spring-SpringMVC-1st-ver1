@@ -102,19 +102,48 @@
 - 서블릿 덕분에 동적으로 원하는 HTML을 만들 수 있었다. 
 - 하지만 HTML을 자바로 작성하는 것은 복잡하고 비효율적이다.
 ```java
-        w.write("<html>\n" +
-                "<head>\n" +
-                " <meta charset=\"UTF-8\">\n" + "</head>\n" +
-                "<body>\n" +
-                "성공\n" +
-                "<ul>\n" +
-                "    <li>id=" + member.getId() + "</li>\n" +
-                "    <li>username=" + member.getUsername() + "</li>\n" +
-                " <li>age=" + member.getAge() + "</li>\n" + "</ul>\n" +
-                "<a href=\"/index.html\">메인</a>\n" + "</body>\n" +
-                "</html>");
+w.write("<html>\n" +
+        "<head>\n" +
+        " <meta charset=\"UTF-8\">\n" + "</head>\n" +
+        "<body>\n" +
+        "성공\n" +
+        "<ul>\n" +
+        "    <li>id=" + member.getId() + "</li>\n" +
+        "    <li>username=" + member.getUsername() + "</li>\n" +
+        " <li>age=" + member.getAge() + "</li>\n" + "</ul>\n" +
+        "<a href=\"/index.html\">메인</a>\n" + "</body>\n" +
+        "</html>");
 ```
 
 - 따라서 HMTL문서에 동적으로 변경해야 하는 부분에 자바 코드를 넣을 수 있는 방법이 생겨났다.
 - 이를 템플릿 엔진이라고 하고 그 예로 JSP, Thymeleaf, Freemarker, Velocity 등이 있다.
+
+#### JSP 사용
+- 의존성 추가
+```groovy
+//JSP 추가 시작
+implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+implementation 'javax.servlet:jstl' 
+//JSP 추가 끝
+```
+
+- `<%@ page contentType="text/html;charset=UTF-8" language="java" %>`
+  - JSP 문서라는 것을 나타내는 뜻
+  - 무조건 이렇게 시작을 한다.
+- 자바 코드를 그대로 사용할 수 있다.
+  - `<%@ page import="hello.servlet.domain.member.MemberRepository" %>` import문
+  - `<% ~~ %>` 자바 코드 입력 부분
+  - `<%= ~~ %>` 자바 코드 출력 부분
+
+#### 서블릿과 JSP의 한계
+- 서블릿을 사용할 때는 HTML코드가 자바 코드에 섞여 지저분하고 복잡하다.
+- JSP를 사용하면 HTML파일을 따로 분리시킬 수 있고 필요한 부분에 대해 자바 코드를 적용했다.
+- 하지만 JSP 파일에 비즈니스 로직과 HTML이 공존한다.
+- 비즈니스 로직이 노출되고 나중에는 코드의 분량이 엄청나게 증가되므로 관리하기가 어렵다.
+- 이런 단점을 해결하고자 MVC 패턴이 등장한다.
+
+#### MVC 패턴의 등장
+- 비즈니스 로직은 서블릿 처럼 다른 곳에서 처리하고, JSP는 목적에 맞게 View를 그리는 일에 집중하도록 하자.
+
+
 
