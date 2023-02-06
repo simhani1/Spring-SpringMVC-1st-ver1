@@ -206,3 +206,18 @@ implementation 'javax.servlet:jstl'
 
 - 각 컨트롤러들은 인터페이스를 구현한다.
 - 프론트 컨트롤러는 앞으로 이 인터페이스를 호출해서 구현과 상관없이 로직의 일관성을 가져갈 수 있다.
+
+#### 프론트 컨트롤러 도입 - V2
+![img.png](img/img_5.png)
+
+```java
+String viewPath = "/WEB-INF/views/new-form.jsp";
+RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+dispatcher.forward(request, response);
+```
+
+- V1의 모든 컨트롤러에서 뷰로 이동하는 부분에 중복이 있고 깔끔하지 못하다.
+- 이 부분을 깔끔하게 분리하기 위해 별도로 뷰를 처리하는 객체를 만들자
+
+- MyView 객체를 만들어서 요청에 따라 필요한 JSP를 불러와서 전달하도록 만들어서 중복되는 코드를 줄였다.
+
