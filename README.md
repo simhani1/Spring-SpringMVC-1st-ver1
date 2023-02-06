@@ -221,3 +221,53 @@ dispatcher.forward(request, response);
 
 - MyView 객체를 만들어서 요청에 따라 필요한 JSP를 불러와서 전달하도록 만들어서 중복되는 코드를 줄였다.
 
+#### Model 추가 - V3
+![img.png](img/img_6.png)
+
+- 서블릿 종속성 제거
+  - 컨트롤러 입장에서 HttpServletRequest, response가 꼭 필요할까?
+  - 요청 파라미터 정보는 Map으로, request 객체를 Model로 사용하는 대신에 별도의 Model객체를 만들어서 반환하면 된다.
+  - 이렇게 한다면 구현 코드도 매우 단순해지고, 테스트 코드 작성도 쉬워진다.
+- 뷰 이름 중복 제거
+  - 컨트롤러에서 지정하는 뷰 이름에 중복이 있는 것을 볼 수 있다.
+    - `/WEB-INF/views/members.jsp`
+  - 컨트롤러는 뷰의 논리 이름을 반환하고, 실제 물리 위치의 이름은 프론트 컨트롤러에서 처리하도록 단순화 하자.
+  - 이렇게 한다면 뷰의 폴더 위치가 변경됐을 때 프론트 컨트롤러만 고치면 된다.
+
+- ModelView
+  - 서블릿의 종속성을 제거하기 위해 Model을 직접 만들고, 추가로 View 이름까지 전달하는 객체를 만들어 보자
+  - 뷰의 이름과 뷰를 렌더링 할 때 필요한 model객체를 가지고 있다.
+  - 단순히 컨트롤러에서 뷰에 필요한 데이터를 key, value에 넣어주면 된다.
+
+- 종속성 제거
+  - 이제 FrontController는 서브릿에 대해 종속성이 제거된 모습을 볼 수 있다.
+  ```java
+        @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String requestURI = request.getRequestURI();
+        ControllerV3 controller = controllerMap.get(requestURI);
+        if (controller == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        // paramMap
+        Map<String, String> paramMap = createParamMap(request);
+        ModelView mv = controller.process(paramMap);
+        String viewName = mv.getViewName();  // 논리이름 new-form
+
+        MyView view = viewResolver(viewName);
+        view.render(mv.getModel(), request, response);
+
+    }
+  ```
+  
+- 뷰 리졸버
+  - 컨트롤러가 반환한 논리 뷰 이름을 실제 물리 뷰 경로로 변경한다. 
+  - 그리고 실제 물리 경오가 있는 MyView 객체를 반환한다.
+  - 논리 뷰 이름: `members`
+  - 물리 뷰 경오: `/WEB-INF/views/members.jsp`
+  - 이렇게 하는 이유는 나중에 물리 경로가 변경되었을 때 모든 컨트롤러를 돌아 다니면서 경로를 수정할 필요가 없기 때문이다.
+  - 오직 뷰 리졸버에서만 경로를 수정해주면 된다.
+
