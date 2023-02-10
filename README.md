@@ -298,3 +298,60 @@ dispatcher.forward(request, response);
 - 핸들러: 컨트롤러의 이름을 더 넓은 범위인 핸들러로 변경했다. 어댑터가 있기 때문에 꼭 컨트롤러의 개념 뿐만 아니라 어떠한 것이든 해당하는 종류의 어댑터만 존재하면 모두 처리가 가능하기 때문이다.
 
 #### 유연한 컨트롤러2 - V5
+- 핸들러 정보들을 다음과 같이 등록만 해놓으면 타입에 상관없이 다양한 요청들을 처리할 수 있다.
+```java
+    static void init(Map<String, Object> handlerMappingMap) {
+        handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
+        handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberSaveControllerV3());
+        handlerMappingMap.put("/front-controller/v5/v3/members", new MemberListControllerV3());
+        handlerMappingMap.put("/front-controller/v5/v4/members/new-form", new MemberFormControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/save", new MemberSaveControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members", new MemberListControllerV4());
+    }
+```
+
+#### 스프링 MVC 전체 구조
+![img.png](img/img_9.png)
+
+- `DispatcherServlet`
+  - 스프링 MVC도 프론트 컨트롤러 패턴으로 구현되어 있다.
+  - 스프링 MVC의 프론트 컨트롤러가 디스패쳐 서블릿이다.
+- `DispatcherServlet` 서블릿 등록
+  - `DispatcherServlet`도 부모 클래스에서 `HttpServlet`을 상속 받는다.
+  - 스프링 부트는 `DispatcherServlet`를 서블릿으로 자동으로 등록하면서 모든 경로에 대해 매핑한다.
+- 요청 흐름
+  - 서블릿이 호출되면 `HttpServlet`이 제공하는 `service()`가 호출된다.
+  ```java
+      @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpMethod httpMethod = HttpMethod.resolve(request.getMethod());
+        if (httpMethod == HttpMethod.PATCH || httpMethod == null) {
+            processRequest(request, response);
+        }
+        else {
+            super.service(request, response);
+        }
+    }
+  ```
+  
+  - `FrameworkServlet.service()` 를 시작으로 여러 메서드가 호출되면서 `DispacherServlet.doDispatch()` 가 호출된다.
+  - `doDispatch()` 메서드가 제일 중요하다.
+- 동작 순서
+1. 핸들러 조회 : 핸들러 맵핑을 통해 요청 URL에 맵핑된 핸들러(컨트롤러)를 조회한다.
+2. 핸들러 어댑터 조회 : 핸들러를 실행할 수 있는 핸들러 어댑터를 조회한다.
+3. 핸들러 어댑터 실행 : 핸들러 어댑터를 실행한다.
+4. 핸들러 실행 : 핸들러 어댑터가 실제 핸들러를 실행한다.
+5. ModelAndView 반환 : 들러 어댑터는 핸들러가 반환하는 정보를 ModelAndView로 변환해서 반환한다.
+6. viewResolver 호풀 : 뷰 리졸버를 찾고 실행한다.
+7. View 반환 : 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체를 반환한다.
+8. 뷰 렌더링 : 뷰를 통해서 뷰를 렌더링한다.
+
+- 인터페이스 살펴보기
+  - 스프링 MVC의 강점은 DispatcherServlet코드의 변경 없이 원하는 기능을 변경하거나 확장할 수 있다는 점이다.
+- 주요 인터페이스 목록
+  - 핸들러 매핑: org.springframework.web.servlet.HandlerMapping 
+  - 핸들러 어댑터: org.springframework.web.servlet.HandlerAdapter 
+  - 뷰 리졸버: org.springframework.web.servlet.ViewResolver
+  - 뷰: org.springframework.web.servlet.View
