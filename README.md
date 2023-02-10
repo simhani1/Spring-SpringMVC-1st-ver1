@@ -355,3 +355,45 @@ dispatcher.forward(request, response);
   - 핸들러 어댑터: org.springframework.web.servlet.HandlerAdapter 
   - 뷰 리졸버: org.springframework.web.servlet.ViewResolver
   - 뷰: org.springframework.web.servlet.View
+
+#### 핸들러 맵핑과 핸들러 어댑터
+- OldController
+  ```java
+    @Component("/springmvc/old-controller")  // 스프링 빈의 이름을 url 패턴으로 설정한 것
+    public class OldController implements Controller {
+
+      @Override
+      public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+          System.out.println("OldController.handleRequest");
+          return null;
+      }
+
+  }
+  ```
+
+- 핸들러 맵핑 : 핸들러 맵핑에서 이 컨트롤러를 찾을 수 있어야 한다.
+- 핸들러 어댑터 : 핸들러 맵핑을 통해서 찾은 핸들러를 실행할 수 있는 핸들러 어댑터가 필요하다.
+  - 'Controller'인터페이스를 실행할 수 있는 핸들러 어댑터를 찾고 실행해야 한다.
+- HandlerMApping
+```
+0 = RequestMappingHandlerMapping : : 애노테이션 기반의 컨트롤러인 @RequestMapping에서 사용
+1= BeanNameUrlHandlerMapping : 스프링 빈의 이름으로 핸들러를 찾는다.
+```
+
+- HandlerAdapter
+```
+0 = RequestMappingHandlerAdapter : 애노테이션 기반의 컨트롤러인 @RequestMapping에서 사용
+1 = HttpRequestHandlerAdapter : HttpRequestHandler 처리
+2 = SimpleControllerHandlerAdapter : Controller 인터페이스(애노테이션X, 과거에 사용) 처리
+```
+
+- 과정
+  1. 핸들러 맵핑으로 핸들러 조회
+     - HandlerMapping을 순서대로 찾아서 핸들러를 찾는다.
+  2. 핸들러 어댑터 조회
+     - HandlerAdapter의 supports()를 순서대로 호출
+     - SimpleControllerHandlerAdapter가 Controller 인터페이스를 지원하므로 대상이 된다.
+  3. 핸들러 어댑터 실행
+     - DispatcherServlet이 조회한 SimpleControllerAdapter를 실행하면서 핸들러 정보도 함께 넘겨준다.
+     - 그 내부에서 핸들러인 OldController를 실행하고 결과를 반환한다.
+

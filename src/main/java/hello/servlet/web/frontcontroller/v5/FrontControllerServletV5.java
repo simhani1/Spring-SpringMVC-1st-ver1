@@ -2,7 +2,9 @@ package hello.servlet.web.frontcontroller.v5;
 
 import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.MyView;
-import lombok.RequiredArgsConstructor;
+import hello.servlet.web.frontcontroller.v5.handler.HandlerAdapters;
+import hello.servlet.web.frontcontroller.v5.handler.HandlerMappingMap;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +15,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @WebServlet(name = "frontControllerServletV5", urlPatterns = "/front-controller/v5/*")
 public class FrontControllerServletV5 extends HttpServlet {
 
     private final Map<String, Object> handlerMappingMap;
     private final List<MyHandlerAdapter> handlerAdapters;
+
+    @Autowired
+    public FrontControllerServletV5(HandlerMappingMap handlerMappingMap, HandlerAdapters handlerAdapters) {
+        this.handlerMappingMap = handlerMappingMap.getHandlerMappingMap();
+        this.handlerAdapters = handlerAdapters.getHandlerAdapters();
+    }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
