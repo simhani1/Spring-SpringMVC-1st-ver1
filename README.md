@@ -456,4 +456,59 @@ dispatcher.forward(request, response);
    }  
   ```
   
-#### 컨트롤러 통합
+#### 스프링 MVC - 실용적인 방식
+- ModelAndView객체를 직접 만들지 않고 view의 이름을 문자열 그대로 반환시켜도 해당 이름을 갖는 view를 찾아준다.
+```java
+    @RequestMapping("/save")
+    public String save(
+    @RequestParam("username") String username,
+    @RequestParam("age") int age,
+    Model model) {
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            model.addAttribute("member", member);
+            return "save-result";
+    }
+```
+
+- @RequestMapping 어노테이션의 문제점
+  - GET, POST 등 같은 url로 메서드를 다르게 요청을 보내더라도 걸러내지 못하고 api가 실행된다.
+
+- 과거 사용법
+```java
+    @RequestMapping(value = "/new-form", method = RequestMethod.GET)
+    public String newForm() {
+        // 유연하게 동작하므로 문자열을 반환하면 해당 문자열의 view를 알아서 찾는다.
+        return "new-form";
+//        return new ModelAndView("new-form");
+    }
+```
+
+- 어노테이션 기반 사용법
+```java
+    @GetMapping(value = "/new-form")
+    public String newForm() {
+        // 유연하게 동작하므로 문자열을 반환하면 해당 문자열의 view를 알아서 찾는다.
+        return "new-form";
+//        return new ModelAndView("new-form");
+    }
+```
+
+- 메서드를 검사해주는 것을 확인할 수 있다.
+![img.png](img/img_10.png)
+
+- Model 파라미터
+  - `save()`, `members()`를 보면 Model을 파라미터로 받는 것을 볼 수 있다.
+  - 스프링 MVC도 이런 편의 기능을 제공한다.
+- ViewName 직접 반환
+  - 뷰의 논리 이름을 컨트롤러에서 바로 반환할 수 있다.
+- `@RequestParam` 사용
+  - HTTP 요청 파라미터를 해당 어노테이션을 사용하여 받을 수 있다.
+  - `@RequestParam("username")` 과 `request.getParameter("username")`가 거의 동일한 코드라고 생각하면 된다.
+- `@RequestMapping` -> `@GetMapping`, `@PostMapping`으로 교체
+  - HTTP 메서드도 구분해줄 수 있다.
+  - 과거에는 @RequestMapping(method = RequestMethod.GET)와 같이 작성하여 사용했다.
+  - @GetMapping 어노테이션에 들어가면 위와 같은 코드가 작성이 되어있다.
+  - 즉 어노테이션을 위한 어노테이션이 이미 스프링에 만들어져 있다.
