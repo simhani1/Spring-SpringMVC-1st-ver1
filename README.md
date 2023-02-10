@@ -397,3 +397,30 @@ dispatcher.forward(request, response);
      - DispatcherServlet이 조회한 SimpleControllerAdapter를 실행하면서 핸들러 정보도 함께 넘겨준다.
      - 그 내부에서 핸들러인 OldController를 실행하고 결과를 반환한다.
 
+#### 뷰 리졸버
+- InternalResourceViewResolver
+  - 스프링 부트는 이 뷰 리졸버를 자동으로 등록한다.
+  - 이때 `application.properties`에 등록한 아래 내용들을 설정 정보로 사용해서 등록한다.
+  ```groovy
+  spring.mvc.view.prefix=/WEB-INF/views/
+  spring.mvc.view.suffix=.jsp
+  ```
+  
+- 스프링 부트가 자동 등록하는 뷰 리졸버
+```
+1 = BeanNameViewResolver : 빈 이름으로 뷰를 찾아서 반환한다. (예: 엑셀 파일 생성 기능에 사용)
+2 = InternalResourceViewResolver : JSP를 처리할 수 있는 뷰를 반환한다.
+```
+
+- 과정
+  1. 핸들러 어댑터 호출
+  2. ViewResolver 호출
+     - `new-form`이라는 뷰 이름으로 viewResolver를 순서대로 호출한다.
+     - 이때 `InternalResourceViewResolver`가 호출된다.
+  3. InternalResourceResolver
+     - `InternalResourceView`를 반환한다.
+  4. 뷰 - InternalResourceView
+     - InternalResourceView는 JSP처럼 `forward()`를 호출해서 처리할 수 있는 경우에 사용한다.
+  5. view.render()
+     - `view.render()`가 호출되고, InternalResourceView는 `forward()`를 사용해서 JSP를 실행한다.
+
