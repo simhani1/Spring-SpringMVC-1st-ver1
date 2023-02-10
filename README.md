@@ -424,3 +424,35 @@ dispatcher.forward(request, response);
   5. view.render()
      - `view.render()`가 호출되고, InternalResourceView는 `forward()`를 사용해서 JSP를 실행한다.
 
+#### 스프링 MVC - 시작하기
+- `@RequestMapping`
+  - RequestMappingHandlerMapping
+  - RequestMappingHandlerAdapter
+  - 위 두개가 제일 우선순위가 높은 핸들러, 핸들러 어댑터이다.
+- `@Controller`
+  - 자동으로 스프링 빈으로 등록한다.
+  - 스프링 MVC에서 어노테이션 기반 컨트롤러로 자동 인식한다.
+- RequestMappingHandlerMapping
+  - 이 핸들러는 `@RequestMapping`  또는 `@Controller`어노테이션이 클래스 레벨에 붙어 있는 경우에 앱핑 정보로 인식한다.
+  - 따라서 아래와 같은 방식으로 작성할 수도 있다.
+  ```java
+    @Component
+    @RequestMapping
+    public class SpringMemberFromControllerV1 {
+    
+        @RequestMapping("/springmvc/v1/members/new-form")
+        public ModelAndView process() {
+            return new ModelAndView("new-form");
+        }
+    }
+  ```
+  
+  - 'ReqeustMappingHandlerMapping.class'
+  ```java
+   @Override
+   protected boolean isHandler(Class<?> beanType) {
+      return (AnnotatedElementUtils.hasAnnotation(beanType, Controller.class) ||
+				AnnotatedElementUtils.hasAnnotation(beanType, RequestMapping.class));
+   }  
+  ```
+  
